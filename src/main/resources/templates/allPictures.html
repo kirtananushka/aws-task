@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Pictures</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5 mb-1">
+    <h1>All Pictures</h1>
+    <div th:if="${pictures == null or pictures.size() == 0}" class="alert alert-warning" role="alert">
+        <p>The bucket is empty.</p>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="row">
+                <div class="col-3 mt-3" th:each="picture : ${pictures}">
+                    <div class="card">
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px">
+                            <img th:src="'data:image/png;base64,' + ${picture.pictureData}" class="img-fluid" style="max-height: 150px" alt="Thumbnail">
+                        </div>
+                        <div class="card-body">
+                            <div style="white-space: nowrap;">
+                                <span style="text-overflow: ellipsis; overflow: hidden;" th:text="${picture.fileName}"></span>
+                            </div>
+                            <a th:href="@{/viewPicture(fileName=${picture.fileName})}" class="btn btn-info btn-sm">Show</a>
+                            <a th:href="@{/downloadPicture(fileName=${picture.fileName})}" class="btn btn-success btn-sm">Download</a>
+                            <form th:action="@{/deletePicture}" method="post" style="display: inline;">
+                                <input type="hidden" name="fileName" th:value="${picture.fileName}" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5" style="padding-bottom: 50px">
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/operations'">Operations</button>
+    </div>
+</div>
+</body>
+</html>

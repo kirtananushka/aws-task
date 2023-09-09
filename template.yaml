@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SQS to SNS.
+Resources:
+  NotifierFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://kir-tananushka-apps/lambda01.zip
+      Handler: lambda01.lambda_handler
+      FunctionName: kir-uploads-batch-notifier
+      Runtime: python3.8
+      Description: Python function
+      MemorySize: 512
+      Timeout: 10
+      Policies:
+        - AWSLambda_FullAccess
+        - AmazonSNSFullAccess
+        - AmazonSQSFullAccess
+      Tracing: Active
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Canary10Percent10Minutes
+  NotifierFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['/', ['/aws/lambda', !Ref NotifierFunction]]
+      RetentionInDays: 1

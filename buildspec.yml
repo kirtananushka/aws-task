@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+
+  build:
+    commands:
+      - echo "Executing build phase"
+      - mvn clean package -DskipTests=true
+
+  post_build:
+    commands:
+      - echo "Executing post-build phase"
+      - aws cloudformation package --template-file template.yaml --s3-bucket kir-tananushka-apps --output-template-file output-template.yaml
+
+artifacts:
+  files:
+    - output-template.yaml
+    - target/picture-s3-processor-0.0.1.jar
